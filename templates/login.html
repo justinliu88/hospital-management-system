@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Application authority</title>
+    <link href="{% static "plugins/bootstrap-3.3.0/css/bootstrap.min.css" %}" rel="stylesheet"/>
+	<link href="{% static "plugins/material-design-iconic-font-2.2.0/css/material-design-iconic-font.min.css" %}" rel="stylesheet"/>
+	<link href="{% static "plugins/bootstrap-table-1.11.0/bootstrap-table.min.css" %}" rel="stylesheet"/>
+	<link href="{% static "plugins/waves-0.7.5/waves.min.css" %}" rel="stylesheet"/>
+	<link href="{% static "plugins/jquery-confirm/jquery-confirm.min.css" %}" rel="stylesheet"/>
+	<link href="{% static "plugins/select2/css/select2.min.css" %}" rel="stylesheet"/>
+
+	<link href="{% static "css/common.css" %}" rel="stylesheet"/>
+</head>
+<body>
+
+
+
+<div style="width: 50%;height: 50%;background: black;padding: 20px;margin-top: 80px;margin-left: auto;margin-right: auto">
+    <div style="width: 100%;height: 100%;background: white;padding: 20px">
+        <label>You need to apply for permission before proceeding!</label>
+        <div style="width: 10px;height: 10px"></div>
+        <form action="/login" method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+			    <label for="Name" class="">Name</label>
+			    <input id="Name" name="Name" type="text" class="form-control" >
+		    </div>
+            <div class="form-group">
+			    <label for="eMail" class="">eMail</label>
+			    <input id="eMail" name="eMail"  type="text" class="form-control">
+		    </div>
+            <input id="activitycode" name="activitycode" type="text" value=" "  style="visibility: hidden;height: 1px;width: 1px">
+            <div>
+                <input type="submit" class="waves-button" value="Submit">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="{% static "plugins/jquery.1.12.4.min.js" %}"></script>
+<script src="{% static "plugins/bootstrap-3.3.0/js/bootstrap.min.js" %}"></script>
+<script src="{% static "plugins/bootstrap-table-1.11.0/bootstrap-table.min.js" %}"></script>
+<script src="{% static "plugins/bootstrap-table-1.11.0/locale/bootstrap-table-zh-CN.min.js" %}"></script>
+<script src="{% static "plugins/waves-0.7.5/waves.min.js" %}"></script>
+<script src="{% static "plugins/jquery-confirm/jquery-confirm.min.js" %}"></script>
+<script src="{% static "plugins/select2/js/select2.min.js" %}"></script>
+
+<script src="{% static "js/common.js" %}"></script>
+
+<script>
+
+    function setCookie(name,value) {
+        var Days = 3000;
+        var exp = new Date();
+        exp.setTime(exp.getTime() + Days*24*60*60*1000);
+        document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+    }
+
+    function getCookie(name) {
+        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+        if(arr=document.cookie.match(reg))
+        return arr[2];
+        else
+        return null;
+    };
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    };
+
+    var csrftoken = getCookie('csrftoken');
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    $(function(){
+        if(getCookie("activitycode")){
+            var row = {"activitycode":getCookie("activitycode")};
+            function checkCode(){
+               $.post( "checkcode", row).done(function( data ) {
+                   if (data == "success"){
+                       window.location.replace("index?activitycode="+getCookie("activitycode"));
+                   };
+               });
+            }
+            setTimeout(checkCode,10);
+        }
+    });
+
+    function getActivityCode(){
+        var now=new Date();
+        return now.getTime().toString();
+    };
+
+    //if (getCookie("activitycode")){
+    //    var acode = getCookie("activitycode");
+    //    {#           #}
+    //}else{
+        var acode = getActivityCode();
+        setCookie("activitycode",acode);
+    //};
+
+    $("#activitycode").val(acode);
+</script>
+
+</body>
+</html>

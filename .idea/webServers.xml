@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="989d6899-60e0-49f3-9ccf-6c84a432abef" name="101.201.73.252" url="http://101.201.73.252/login/">
+        <fileTransfer host="101.201.73.252" port="22" rootFolder="/root/sportmr" accessType="SFTP" password="dff8dfe5dfe5dffedf9bdf98df99dfd8dfc5dfc5dfde" username="root">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
